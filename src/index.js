@@ -36,7 +36,8 @@ app.post('/webhook', (req, res) => {
     const xLineSignature = req.header('X-Line-Signature')
     logger.info('[X-Line-Signature] ' + xLineSignature)
 
-    logger.info('[body] ' + req.body)
+    const body = req.body
+    logger.info('[body] ' + body)
 
 
     const signature = crypto
