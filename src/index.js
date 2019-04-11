@@ -39,12 +39,13 @@ app.post('/webhook', (req, res) => {
     const body = req.body
     logger.info('[body] ' + body)
 
-
-    const signature = crypto
+    if (channelSecret && body) {
+        const signature = crypto
         .createHmac('SHA256', channelSecret)
         .update(body).digest('base64');
         // Compare X-Line-Signature request header and the signature
-    logger.info('[signature] ' + signature)
+        logger.info('[signature] ' + signature)
+    }
 
     res.send('webhook')
 })
