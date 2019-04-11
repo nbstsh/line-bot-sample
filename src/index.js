@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const logger = require('./log/logger')
 const fs = require('fs')
+const crypto = require('crypto')
 
 
 process.on('unhandledRejection', (ex) => {
@@ -30,6 +31,19 @@ app.get('/logs', (req, res) => {
 
 
 app.post('/webhook', (req, res) => {
+    const channelSecret = process.env.LINE_BOT_SAMPLE_CHANNEL_SECRET
+
+    const xLineSignature = req.header('X-Line-Signature')
+    logger.info('[X-Line-Signature] ' + xLineSignature)
+
+    logger.info('[body] ' + req.body)
+
+
+    const signature = crypto
+        .createHmac('SHA256', channelSecret)
+        .update(body).digest('base64');
+        // Compare X-Line-Signature request header and the signature
+    logger.info('[signature] ' + signature)
 
     res.send('webhook')
 })
