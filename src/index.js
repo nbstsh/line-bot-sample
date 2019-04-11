@@ -2,14 +2,16 @@ const express = require('express')
 const app = express()
 const logger = require('./log/logger')
 const fs = require('fs')
-const crypto = require('crypto')
+
+const webhookAuth = require('./middleware/webhook-auth')
 
 app.use(express.json())
 
+
+// TODO error handling
 process.on('unhandledRejection', (ex) => {
     console.log(ex)
 })
-
 process.on('uncaughtException', (ex) => {
     console.log(ex)
 })
@@ -18,11 +20,6 @@ app.get('/', (req, res) => {
     res.send('Weolcome to line bot sample!!!')
 })
 
-app.post('/', (req, res) => {
-    console.log(req.body)
-
-    res.send('sample')
-})
 
 app.get('/logs', (req, res) => {
     fs.readFile('logs/combined.log', (err, data) => {
@@ -37,24 +34,17 @@ app.get('/logs', (req, res) => {
 })
 
 
-app.post('/webhook', (req, res) => {
-    const channelSecret = process.env.LINE_BOT_SAMPLE_CHANNEL_SECRET
+app.post('/webhook', webhookAuth, (req, res) => {
+    const { events } = req.body
 
-    const xLineSignature = req.header('X-Line-Signature')
-    logger.info('[X-Line-Signature] ' + xLineSignature)
+    events.forEach(({ type, message }) => {
+        if (type !== 'message' && message.type !== 'text') return 
 
-    const body = req.body && JSON.stringify(req.body)
-    logger.info('[body] ' + body)
+        const text = message.text
+    })
 
-    if (channelSecret && body) {
-        const signature = crypto
-        .createHmac('SHA256', channelSecret)
-        .update(body).digest('base64');
-        // Compare X-Line-Signature request header and the signature
-        logger.info('[signature] ' + signature)
-    }
 
-    res.send('webhook')
+    res.send()
 })
 
 
