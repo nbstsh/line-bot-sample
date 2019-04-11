@@ -39,7 +39,7 @@ app.post('/webhook', webhookAuth, (req, res) => {
     const { events } = req.body
 
     events.forEach(({ source, type, message }) => {
-        if (type !== 'message' && message.type !== 'text') return 
+        if (type !== 'message' || message.type !== 'text') return 
 
         addMessage({
             userId: source.userId,
