@@ -1,5 +1,5 @@
 const crypto = require('crypto')
-
+const logger = require('../log/logger')
 
 const CHANNEL_SECRET = process.env.LINE_BOT_SAMPLE_CHANNEL_SECRET
 // TODO error handling
