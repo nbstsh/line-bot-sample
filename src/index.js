@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const logger = require('./log/logger')
 
 
 
@@ -8,7 +9,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/webhook', (req, res) => {
-    console.log('post /webhook')
+    logger.info('post /webhook')
 
     res.send('webhook')
 })
@@ -16,4 +17,4 @@ app.post('/webhook', (req, res) => {
 
 
 const PORT = process.env.PORT || 3000
-app.listen(PORT, () => console.log(`Start listening on port ${PORT}...`))
+app.listen(PORT, () => logger.info(`Start listening on port ${PORT}...`))
