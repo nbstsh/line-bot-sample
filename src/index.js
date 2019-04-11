@@ -4,6 +4,7 @@ const logger = require('./log/logger')
 const fs = require('fs')
 const crypto = require('crypto')
 
+app.use(express.json())
 
 process.on('unhandledRejection', (ex) => {
     console.log(ex)
@@ -15,6 +16,12 @@ process.on('uncaughtException', (ex) => {
 
 app.get('/', (req, res) => {
     res.send('Weolcome to line bot sample!!!')
+})
+
+app.post('/', (req, res) => {
+    console.log(req.body)
+
+    res.send('sample')
 })
 
 app.get('/logs', (req, res) => {
