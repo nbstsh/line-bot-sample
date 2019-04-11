@@ -43,7 +43,7 @@ app.post('/webhook', (req, res) => {
     const xLineSignature = req.header('X-Line-Signature')
     logger.info('[X-Line-Signature] ' + xLineSignature)
 
-    const body = req.body
+    const body = req.body && req.body.toString()
     logger.info('[body] ' + body)
 
     if (channelSecret && body) {
