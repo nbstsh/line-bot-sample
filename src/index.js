@@ -4,6 +4,7 @@ const logger = require('./log/logger')
 const fs = require('fs')
 
 const webhookAuth = require('./middleware/webhook-auth')
+const { addMessage, loadMessages } = require('./message/message')
 
 app.use(express.json())
 
@@ -37,16 +38,32 @@ app.get('/logs', (req, res) => {
 app.post('/webhook', webhookAuth, (req, res) => {
     const { events } = req.body
 
-    events.forEach(({ type, message }) => {
+    events.forEach(({ source, type, message }) => {
         if (type !== 'message' && message.type !== 'text') return 
 
-        const text = message.text
+        addMessage({
+            userId: source.userId,
+            text: message.text
+        })
     })
-
 
     res.send()
 })
 
+app.get('/messages', (req, res) => {
+    res.send(loadMessages())
+})
+
+app.post('/messages', (req, res) => {
+    const { userId, text } = req.body
+
+    if (!userId || !text) return res.status(400).send('Invalid request.')
+
+    const message = { userId, text }
+    addMessage(message)
+
+    res.send(message)
+})
 
 
 const PORT = process.env.PORT || 3000
