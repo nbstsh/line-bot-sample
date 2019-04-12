@@ -10,7 +10,7 @@ if (!CHANNEL_ACCESS_TOKEN) {
 const REPLY_ENDPOINT = 'https://api.line.me/v2/bot/message/reply'
 
 
-const replay = async (replyToken, messages) => {
+const reply = async (replyToken, messages) => {
     const options = {
         method: 'POST',
         uri: REPLY_ENDPOINT,
@@ -29,4 +29,4 @@ const replay = async (replyToken, messages) => {
 }
 
 
-module.exports = { replay }
+module.exports = { reply }
