@@ -5,6 +5,7 @@ const fs = require('fs')
 
 const webhookAuth = require('./middleware/webhook-auth')
 const { addMessage, loadMessages } = require('./message/message')
+const { reply } = require('./helper/webhook')
 
 app.use(express.json())
 
@@ -38,13 +39,30 @@ app.get('/logs', (req, res) => {
 app.post('/webhook', webhookAuth, (req, res) => {
     const { events } = req.body
 
-    events.forEach(({ source, type, message }) => {
+    const replyMessages = [
+        {
+            type: 'text',
+            text: 'こんちは!!!!'
+        },
+        {
+            type: 'text',
+            text: 'こんばんは!!!!'
+        },
+        {
+            type: 'text',
+            text: 'おはよう!!!!'
+        }
+    ]
+
+    events.forEach(({ source, type, message, replyToken }) => {
         if (type !== 'message' || message.type !== 'text') return 
 
         addMessage({
             userId: source.userId,
             text: message.text
         })
+
+        reply(replyToken, replyMessages)
     })
 
     res.send()
